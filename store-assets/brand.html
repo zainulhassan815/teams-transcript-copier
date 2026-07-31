@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transcript Copier — Brand & Store Assets</title>
+<style>
+  :root {
+    --brand: #5b5fc7;
+    --brand-deep: #4f52b2;
+    --brand-tint: #eeeffc;
+    --sparkle: #ffd84d;
+    --ink: #242424;
+    --muted: #8a8a8e;
+    --line: #e3e3e6;
+    --paper: #f7f7fa;
+    --ok: #13a10e;
+    --warn: #b25e00;
+    --warn-bg: #fff4d5;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    padding: 48px; max-width: 1600px; margin: 0 auto;
+  }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .sub { color: #777; margin-bottom: 40px; }
+  h2 { font-size: 18px; margin: 52px 0 6px; }
+  .spec { color: #888; font-size: 13px; margin-bottom: 16px; }
+  .row { display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap; }
+  .cell { text-align: center; }
+  .cell .label { font-size: 12px; color: #888; margin-top: 8px; }
+  .checker {
+    display: inline-block; line-height: 0; border: 1px solid #ddd; border-radius: 4px;
+    background: repeating-conic-gradient(#e9e9ee 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
+  }
+  .swatches { display: flex; gap: 16px; }
+  .swatch { width: 120px; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; font-size: 12px; }
+  .swatch > div:first-child { height: 64px; }
+  .swatch > div:last-child { padding: 8px; background: #fff; }
+  .exact { display: inline-block; line-height: 0; box-shadow: 0 0 0 1px #ddd, 0 12px 32px rgba(0,0,0,.10); }
+  .darkchat { background: #1f2330; padding: 28px; border-radius: 10px; display: inline-flex; gap: 40px; align-items: center; }
+  .lightchat { background: #fff; padding: 28px; border-radius: 10px; border: 1px solid var(--line); display: inline-flex; gap: 40px; align-items: center; }
+  .stage { padding: 36px; border-radius: 12px; display: inline-flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+  .stage.light { background: #fff; border: 1px solid var(--line); }
+  .stage.dark { background: #1f2330; }
+  .note { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; font-size: 13.5px; color: #555; max-width: 720px; line-height: 1.5; }
+
+  /* ================= banners (white bg + chat-selection graphic) ============ */
+  .banner { background: #fff; display: flex; align-items: center; line-height: normal; }
+  .banner .t2 { font-weight: 600; color: var(--brand); }
+  .banner .t1 { font-weight: 700; color: var(--ink); }
+  .banner .t3 { color: #6f6f74; }
+
+  .chatart { position: relative; flex: none; }
+  .chatart .halo {
+    position: absolute; inset: -12% -8%; border-radius: 50%;
+    background: radial-gradient(closest-side, #eef 0%, rgba(238,238,252,0) 100%);
+  }
+  .bub { position: relative; background: #f3f3f8; border-radius: 10px; padding: 9px 11px; margin: 9px 0; }
+  .bub .ln { height: 6px; border-radius: 3px; background: #d9dae6; margin: 5px 0; }
+  .bub .ln.s { width: 58%; }
+  .bub.sel { background: var(--brand-tint); box-shadow: inset 3px 0 0 0 var(--brand); }
+  .bub.sel .ln { background: #b9bce9; }
+  .chatart svg.cur { position: absolute; }
+  .chatart svg.spark { position: absolute; }
+
+  .promo { width: 440px; height: 280px; padding: 0 0 0 32px; gap: 20px; }
+  .promo .t1 { font-size: 26px; letter-spacing: -0.2px; }
+  .promo .t2 { font-size: 16px; margin-top: 2px; }
+  .promo .t3 { font-size: 12.5px; margin-top: 12px; line-height: 1.5; }
+  .promo .chatart { width: 168px; margin-right: 26px; }
+  .promo .bub { width: 160px; }
+
+  .marquee { width: 1400px; height: 560px; padding: 0 0 0 120px; gap: 70px; }
+  .marquee .t1 { font-size: 68px; letter-spacing: -1px; }
+  .marquee .t2 { font-size: 40px; margin-top: 8px; }
+  .marquee .t3 { font-size: 27px; margin-top: 30px; line-height: 1.5; }
+  .marquee .chatart { width: 430px; margin-right: 90px; }
+  .marquee .bub { width: 410px; border-radius: 22px; padding: 22px 26px; margin: 22px 0; }
+  .marquee .bub .ln { height: 14px; border-radius: 7px; margin: 12px 0; }
+  .marquee .bub.sel { box-shadow: inset 7px 0 0 0 var(--brand); }
+  .marquee-wrap { transform: scale(0.5); transform-origin: top left; height: 280px; }
+
+  /* ================= widget v2 (proposed redesign) ========================== */
+  .w2 {
+    width: 300px; background: #fff; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    padding: 18px; font-size: 13px; line-height: normal;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  .w2-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .w2-title { font-weight: 650; font-size: 14px; flex: 1; letter-spacing: 0.1px; }
+  .w2-hd button {
+    color: var(--muted); border: none; background: none; cursor: pointer;
+    padding: 3px; border-radius: 6px; line-height: 0;
+  }
+  .w2-hd button:hover { background: #f0f0f2; color: var(--ink); }
+  .w2-hero { display: flex; align-items: center; justify-content: space-between; }
+  .w2-num { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+  .w2-sub { margin-top: 5px; font-size: 12.5px; color: var(--muted); }
+  .w2-badge {
+    font-size: 11px; font-weight: 650; white-space: nowrap;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .w2-badge.ok { background: #e6f4e6; color: #0e7a0a; }
+  .w2-badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .w2-range { margin-top: 12px; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .w2-range b { color: var(--ink); font-weight: 600; }
+  .w2-warn { margin-top: 12px; padding: 9px 11px; border-radius: 9px; background: var(--warn-bg); color: #6d5900; font-size: 12px; line-height: 1.45; }
+  .w2-div { height: 1px; background: var(--line); margin-top: 16px; }
+  .w2-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .w2-btns button {
+    padding: 9px 0; border-radius: 9px; font-size: 13px; font-weight: 600;
+    background: #f0f0f2; color: var(--ink); border: none; cursor: pointer; flex: 1;
+  }
+  .w2-btns button:hover { background: #e4e4e8; }
+  .w2-btns .primary { background: var(--brand); color: #fff; flex: 1.5; }
+  .w2-btns .primary:hover { background: var(--brand-deep); }
+  .w2-btns button:disabled { opacity: .4; cursor: default; }
+  .w2-foot { display: flex; margin-top: 14px; font-size: 11px; color: var(--muted); }
+  .w2-foot .v { margin-left: auto; opacity: .7; }
+  .w2-empty { padding: 8px 0 4px; text-align: center; }
+  .w2-empty .line { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--muted); font-size: 12.5px; margin: 7px 0; }
+  .w2-empty kbd {
+    font-family: inherit; background: #f0f0f2; border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 5px; padding: 2px 6px; font-size: 12px; color: var(--ink);
+  }
+  .w2.dark { background: #292929; color: #eee; border-color: #3d3d3d; }
+  .w2.dark .w2-hd button { color: #9a9a9e; }
+  .w2.dark .w2-hd button:hover { background: #3a3a3a; color: #eee; }
+  .w2.dark .w2-sub, .w2.dark .w2-range, .w2.dark .w2-foot { color: #9a9a9e; }
+  .w2.dark .w2-div { background: #3d3d3d; }
+  .w2.dark .w2-range b { color: #eee; }
+  .w2.dark .w2-btns button { background: #3a3a3a; color: #eee; }
+  .w2.dark .w2-btns .primary { background: var(--brand); color: #fff; }
+  .w2.dark .w2-badge.ok { background: #123c10; color: #7ed47a; }
+  .w2-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--brand); color: #fff; border: none; cursor: pointer;
+    border-radius: 999px; padding: 10px 16px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif; line-height: normal;
+  }
+
+  body.export { padding: 0; background: transparent; max-width: none; }
+  body.export .exact { box-shadow: none; }
+</style>
+</head>
+<body>
+
+<h1>Transcript Copier for Microsoft Teams</h1>
+<div class="sub">Brand &amp; store asset sheet · iterate here, build at the end</div>
+
+<h2>Palette</h2>
+<div class="swatches">
+  <div class="swatch"><div style="background:#5b5fc7"></div><div>brand<br>#5B5FC7</div></div>
+  <div class="swatch"><div style="background:#eeeffc"></div><div>brand tint<br>#EEEFFC</div></div>
+  <div class="swatch"><div style="background:#ffd84d"></div><div>sparkle<br>#FFD84D</div></div>
+  <div class="swatch"><div style="background:#242424"></div><div>ink<br>#242424</div></div>
+</div>
+
+<h2>Cursor — selection mode</h2>
+<div class="spec">28×28 CSS px, hotspot 4,4 · 1× and 4× on both chat themes · shipped in v0.7.2</div>
+<div class="row">
+  <div class="cell lightchat">
+    <svg data-asset="cursor" width="28" height="28" viewBox="0 0 28 28">
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="none" stroke="white" stroke-width="4.6" stroke-linejoin="round"/>
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/>
+    </svg>
+    <svg width="112" height="112" viewBox="0 0 28 28">
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="none" stroke="white" stroke-width="4.6" stroke-linejoin="round"/>
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="cell darkchat">
+    <svg width="112" height="112" viewBox="0 0 28 28">
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="none" stroke="white" stroke-width="4.6" stroke-linejoin="round"/>
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<h2>Icon</h2>
+<div class="spec">Pointer on white, hairline border · 128 / 48 / 32 / 16 on transparency checker</div>
+<div class="row" id="icon-row"></div>
+
+<template id="icon-tpl">
+  <svg data-asset="icon" viewBox="0 0 128 128">
+    <rect x="2" y="2" width="124" height="124" rx="28" fill="#ffffff" stroke="#e3e3e6" stroke-width="4"/>
+    <g transform="translate(64,68) scale(3.3) translate(-14,-14)">
+      <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="3.4" stroke-linejoin="round"/>
+    </g>
+    <path d="M98 22 l3.6 9 9 3.6 -9 3.6 -3.6 9 -3.6 -9 -9 -3.6 9 -3.6 Z" fill="#ffd84d"/>
+  </svg>
+</template>
+
+<h2>Widget — proposed redesign</h2>
+<div class="spec">
+  Changes vs shipped: count is the hero number · status is a labelled badge, not a bare dot ·
+  First/Last collapsed into one range line · Copy visually primary and wider · guided empty state ·
+  shortcuts left / version right in the footer. States: empty · complete · gap · dark.
+</div>
+<div class="row">
+  <div class="stage light">
+
+    <div class="w2">
+      <div class="w2-hd">
+        <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        <span class="w2-title">Transcript</span>
+        <button title="Reset capture"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></button>
+        <button title="Collapse"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></button>
+      </div>
+      <div class="w2-empty">
+        <div class="line"><kbd>⌘</kbd><span>click a message to start</span></div>
+        <div class="line"><kbd>⇧</kbd><span>click extends the range</span></div>
+      </div>
+      <div class="w2-div"></div>
+      <div class="w2-btns">
+        <button class="primary" disabled>Copy</button>
+        <button disabled>JSON</button>
+        <button disabled>Export</button>
+      </div>
+      <div class="w2-foot"><span>87 captured</span><span class="v">v0.7.2</span></div>
+    </div>
+
+    <div class="w2">
+      <div class="w2-hd">
+        <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        <span class="w2-title">Transcript</span>
+        <button title="Reset capture"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></button>
+        <button title="Collapse"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></button>
+      </div>
+      <div class="w2-hero">
+        <span class="w2-num">23</span>
+        <span class="w2-badge ok">✓ Complete</span>
+      </div>
+      <div class="w2-sub">messages · 2 ranges</div>
+      <div class="w2-range"><b>12:03</b> Ayesha → <b>15:13</b> Bilal</div>
+      <div class="w2-div"></div>
+      <div class="w2-btns">
+        <button class="primary">Copy</button>
+        <button>JSON</button>
+        <button>Export</button>
+      </div>
+      <div class="w2-foot"><span>⌘ select · ⇧ range · Esc clear</span><span class="v">v0.7.2</span></div>
+    </div>
+
+    <div class="w2">
+      <div class="w2-hd">
+        <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        <span class="w2-title">Transcript</span>
+        <button title="Reset capture"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></button>
+        <button title="Collapse"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></button>
+      </div>
+      <div class="w2-hero">
+        <span class="w2-num">41</span>
+        <span class="w2-badge warn">Possible gap</span>
+      </div>
+      <div class="w2-sub">messages</div>
+      <div class="w2-range"><b>09:22</b> Bilal → <b>18:27</b> Me</div>
+      <div class="w2-warn">Scroll through the conversation so every message gets captured, then copy.</div>
+      <div class="w2-div"></div>
+      <div class="w2-btns">
+        <button class="primary">Copy</button>
+        <button>JSON</button>
+        <button>Export</button>
+      </div>
+      <div class="w2-foot"><span>⌘ select · ⇧ range · Esc clear</span><span class="v">v0.7.2</span></div>
+    </div>
+
+    <button class="w2-pill">
+      <svg width="13" height="13" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#fff" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/></svg>
+      23
+    </button>
+  </div>
+
+  <div class="stage dark">
+    <div class="w2 dark">
+      <div class="w2-hd">
+        <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        <span class="w2-title">Transcript</span>
+        <button title="Reset capture"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></button>
+        <button title="Collapse"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></button>
+      </div>
+      <div class="w2-hero">
+        <span class="w2-num">23</span>
+        <span class="w2-badge ok">✓ Complete</span>
+      </div>
+      <div class="w2-sub">messages · 2 ranges</div>
+      <div class="w2-range"><b>12:03</b> Ayesha → <b>15:13</b> Bilal</div>
+      <div class="w2-div"></div>
+      <div class="w2-btns">
+        <button class="primary">Copy</button>
+        <button>JSON</button>
+        <button>Export</button>
+      </div>
+      <div class="w2-foot"><span>⌘ select · ⇧ range · Esc clear</span><span class="v">v0.7.2</span></div>
+    </div>
+    <button class="w2-pill">
+      <svg width="13" height="13" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#fff" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/></svg>
+      Transcript
+    </button>
+  </div>
+</div>
+
+<h2>Promo tile</h2>
+<div class="spec">Exactly 440×280 · text left, chat-selection graphic right</div>
+<div class="exact">
+  <div class="banner promo" data-asset="promo">
+    <div>
+      <div class="t1">Transcript Copier</div>
+      <div class="t2">for Microsoft Teams</div>
+      <div class="t3">Select messages like files.<br>Copy or export clean,<br>AI&#8209;ready transcripts.</div>
+    </div>
+    <div class="chatart">
+      <div class="halo"></div>
+      <div class="bub"><div class="ln"></div><div class="ln s"></div></div>
+      <div class="bub sel"><div class="ln"></div><div class="ln"></div><div class="ln s"></div>
+        <svg class="cur" style="right:-14px; bottom:-16px" width="34" height="34" viewBox="0 0 28 28">
+          <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="none" stroke="white" stroke-width="4.6" stroke-linejoin="round"/>
+          <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/>
+        </svg>
+        <svg class="spark" style="right:-26px; top:-10px" width="20" height="20" viewBox="0 0 16 16">
+          <path d="M8 1 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 Z" fill="#ffd84d"/>
+        </svg>
+      </div>
+      <div class="bub"><div class="ln s"></div></div>
+    </div>
+  </div>
+</div>
+
+<h2>Marquee promo</h2>
+<div class="spec">Exactly 1400×560 · previewed at 50%</div>
+<div class="marquee-wrap"><div class="exact">
+  <div class="banner marquee" data-asset="marquee">
+    <div>
+      <div class="t1">Transcript Copier</div>
+      <div class="t2">for Microsoft Teams</div>
+      <div class="t3">Select messages like files.<br>Copy or export clean, AI&#8209;ready transcripts.</div>
+    </div>
+    <div class="chatart">
+      <div class="halo"></div>
+      <div class="bub"><div class="ln"></div><div class="ln s"></div></div>
+      <div class="bub sel"><div class="ln"></div><div class="ln"></div><div class="ln s"></div>
+        <svg class="cur" style="right:-30px; bottom:-34px" width="84" height="84" viewBox="0 0 28 28">
+          <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="none" stroke="white" stroke-width="4.6" stroke-linejoin="round"/>
+          <path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7" stroke="#5b5fc7" stroke-width="2.6" stroke-linejoin="round"/>
+        </svg>
+        <svg class="spark" style="right:-58px; top:-22px" width="46" height="46" viewBox="0 0 16 16">
+          <path d="M8 1 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 Z" fill="#ffd84d"/>
+        </svg>
+      </div>
+      <div class="bub"><div class="ln s"></div></div>
+    </div>
+  </div>
+</div></div>
+
+<h2>Screenshots (manual)</h2>
+<div class="note">
+  Store screenshots: exactly 1280×800 (or 640×400), 1 to 5 of them. Capture the real extension in a
+  Teams chat with <b>dummy content only</b>. Good shots: ① a selected range with the panel green,
+  ② shift-hover range preview, ③ an exported transcript.md open next to its images.
+</div>
+
+<script>
+  const row = document.getElementById('icon-row');
+  for (const px of [128, 48, 32, 16]) {
+    const svg = document.getElementById('icon-tpl').content.firstElementChild.cloneNode(true);
+    svg.setAttribute('width', px);
+    svg.setAttribute('height', px);
+    if (px !== 128) svg.removeAttribute('data-asset');
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const box = document.createElement('span');
+    box.className = 'checker';
+    box.appendChild(svg);
+    cell.appendChild(box);
+    cell.insertAdjacentHTML('beforeend', `<div class="label">${px}px</div>`);
+    row.appendChild(cell);
+  }
+
+  // export mode: render a single asset at top-left (used once designs are final)
+  const q = new URLSearchParams(location.search);
+  const want = q.get('asset');
+  if (want) {
+    const el = document.querySelector(`[data-asset="${want}"]`);
+    const px = q.get('px');
+    if (px && el.tagName === 'svg') {
+      el.setAttribute('width', px);
+      el.setAttribute('height', px);
+    }
+    document.body.classList.add('export');
+    document.body.replaceChildren(el);
+  }
+</script>
+</body>
+</html>

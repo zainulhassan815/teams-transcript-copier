@@ -1,0 +1,12 @@
+{
+  "name": "teams-transcript-copier",
+  "version": "0.8.2",
+  "private": true,
+  "scripts": {
+    "test": "node tests/test.js",
+    "pack": "mkdir -p dist && rm -f dist/teams-transcript-copier.zip && zip -qr dist/teams-transcript-copier.zip manifest.json content.js background.js highlights.css icons && unzip -l dist/teams-transcript-copier.zip"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

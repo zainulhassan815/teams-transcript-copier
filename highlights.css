@@ -1,0 +1,27 @@
+/* Injected into the Teams page (light DOM) — only selection highlights live here.
+   All panel UI is inside a shadow root and styled in content.js. */
+
+/* every selected message */
+.ttc-selected {
+  box-shadow: inset 3px 0 0 0 #5b5fc7 !important;
+  background: rgba(91, 95, 199, 0.10) !important;
+  border-radius: 6px;
+}
+
+/* shift+hover: the range a click would select */
+.ttc-preview {
+  background: rgba(91, 95, 199, 0.05) !important;
+  border-radius: 6px;
+}
+
+/* modifier held over a message: dashed outline + pointer.
+   Plain url is the fallback; image-set adds a 2x raster so Retina screens
+   get a crisp cursor instead of Chrome's upscaled 1x rasterization. */
+.ttc-hover {
+  outline: 2px dashed #5b5fc7 !important;
+  outline-offset: -2px;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='none' stroke='white' stroke-width='4.6' stroke-linejoin='round'/><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/></svg>") 4 4, copy !important;
+  cursor: -webkit-image-set(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='none' stroke='white' stroke-width='4.6' stroke-linejoin='round'/><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/></svg>") 1x, url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 28 28'><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='none' stroke='white' stroke-width='4.6' stroke-linejoin='round'/><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/></svg>") 2x) 4 4, copy !important;
+  cursor: image-set(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='none' stroke='white' stroke-width='4.6' stroke-linejoin='round'/><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/></svg>") 1x, url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 28 28'><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='none' stroke='white' stroke-width='4.6' stroke-linejoin='round'/><path d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/></svg>") 2x) 4 4, copy !important;
+  border-radius: 6px;
+}

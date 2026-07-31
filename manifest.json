@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Transcript Copier for Microsoft Teams",
+  "version": "0.8.2",
+  "description": "Select Microsoft Teams messages with Cmd/Ctrl-click and Shift-click, then copy or export them as a clean AI-ready transcript.",
+  "permissions": [
+    "clipboardWrite",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://*.asyncgw.teams.microsoft.com/*",
+    "https://*.asm.skype.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://teams.microsoft.com/*",
+        "https://*.teams.microsoft.com/*",
+        "https://teams.live.com/*",
+        "https://*.cloud.microsoft/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "highlights.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

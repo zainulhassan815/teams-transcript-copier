@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transcript Copier for Microsoft Teams</title>
+<meta name="description" content="Select Teams messages like files. Copy or export clean, AI-ready transcripts with quotes, mentions, images and attachments intact.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --brand: #5b5fc7;
+    --brand-deep: #4f52b2;
+    --brand-tint: #eeeffc;
+    --sparkle: #ffd84d;
+    --ink: #1d1d21;
+    --muted: #77777d;
+    --line: #e6e6ea;
+    --paper: #fbfbfd;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; padding: 88px 0 72px; }
+  .hero .halo {
+    position: absolute; width: 720px; height: 720px; right: -180px; top: -220px;
+    background: radial-gradient(closest-side, #ecedfb 0%, rgba(236,237,251,0) 100%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero .wrap { display: flex; gap: 56px; align-items: center; flex-wrap: wrap; position: relative; }
+  .hero-copy { flex: 1 1 380px; min-width: 320px; }
+  .kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 650; color: var(--brand); background: var(--brand-tint); border-radius: 999px; padding: 6px 14px; }
+  h1 { font-size: clamp(34px, 5vw, 48px); line-height: 1.12; letter-spacing: -1px; margin: 18px 0 8px; }
+  h1 .for { display: block; color: var(--brand); font-size: 0.62em; letter-spacing: -0.3px; margin-top: 4px; }
+  .lede { font-size: 17px; color: #55555c; max-width: 46ch; margin-top: 10px; }
+  .ctas { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    border-radius: 12px; padding: 13px 22px; font-size: 15px; font-weight: 650;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer;
+  }
+  .btn.primary { background: var(--brand); color: #fff; box-shadow: 0 8px 20px rgba(91,95,199,.28); }
+  .btn.primary:hover { background: var(--brand-deep); }
+  .btn.ghost { color: var(--ink); border-color: var(--line); background: #fff; }
+  .btn.ghost:hover { border-color: #cfcfd6; }
+  .trust { margin-top: 16px; font-size: 13px; color: var(--muted); }
+  .trust b { color: var(--ink); font-weight: 600; }
+
+  /* widget replica (mirrors the shipped panel) */
+  .w2 {
+    width: 300px; background: #fff; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(20,20,40,.13);
+    padding: 18px; font-size: 13px; flex: none;
+  }
+  .w2-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .w2-title { font-weight: 650; font-size: 14px; flex: 1; }
+  .w2-hd .ic { color: var(--muted); padding: 3px; border-radius: 6px; line-height: 0; }
+  .w2-hero { display: flex; align-items: center; justify-content: space-between; }
+  .w2-num { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+  .w2-badge { font-size: 11px; font-weight: 650; white-space: nowrap; padding: 4px 10px; border-radius: 999px; background: #e6f4e6; color: #0e7a0a; }
+  .w2-sub { margin-top: 5px; font-size: 12.5px; color: var(--muted); }
+  .w2-range { margin-top: 12px; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .w2-range b { color: var(--ink); font-weight: 600; }
+  .w2-empty { padding: 8px 0 4px; text-align: center; }
+  .w2-empty .line { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--muted); font-size: 12.5px; margin: 7px 0; }
+  kbd {
+    font-family: inherit; background: #f0f0f2; border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 5px; padding: 2px 6px; font-size: 12px; color: var(--ink);
+  }
+  .w2-div { height: 1px; background: var(--line); margin-top: 16px; }
+  .w2-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .w2-btns button {
+    flex: 1; padding: 9px 0; border-radius: 9px; font-size: 13px; font-weight: 600;
+    background: #f0f0f2; color: var(--ink); border: none; cursor: pointer; font-family: inherit;
+  }
+  .w2-btns .primary { background: var(--brand); color: #fff; flex: 1.5; }
+  .w2-btns .primary:hover:not(:disabled) { background: var(--brand-deep); }
+  .w2-btns button:disabled { opacity: .4; cursor: default; }
+  .w2-foot { display: flex; margin-top: 14px; font-size: 11px; color: var(--muted); }
+  .w2-foot .v { margin-left: auto; opacity: .7; }
+  .w2.dark { background: #292929; color: #eee; border-color: #3d3d3d; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .w2.dark .w2-hd .ic, .w2.dark .w2-sub, .w2.dark .w2-range, .w2.dark .w2-foot { color: #9a9a9e; }
+  .w2.dark .w2-range b { color: #eee; }
+  .w2.dark .w2-div { background: #3d3d3d; }
+  .w2.dark .w2-btns button { background: #3a3a3a; color: #eee; }
+  .w2.dark .w2-btns .primary { background: var(--brand); color: #fff; }
+  .w2.dark .w2-badge { background: #123c10; color: #7ed47a; }
+  .demo { flex: 1 1 420px; min-width: 340px; }
+  .demo-stack { display: flex; gap: 24px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+  .demo-stack .w2:last-child { margin-top: 34px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 72px 0; }
+  section.alt { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  h2 { font-size: 28px; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .sect-sub { color: var(--muted); margin-bottom: 36px; max-width: 60ch; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  section.alt .card { background: var(--paper); }
+  .card .glyph {
+    width: 34px; height: 34px; border-radius: 9px; background: var(--brand-tint);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--brand);
+  }
+  .card h3 { font-size: 15.5px; margin-bottom: 6px; }
+  .card p { font-size: 13.5px; color: #55555c; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; counter-reset: step; }
+  .step { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px; position: relative; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center;
+    background: var(--brand); color: #fff; font-weight: 700; font-size: 14px; border-radius: 8px; margin-bottom: 12px;
+  }
+  .step h3 { font-size: 15.5px; margin-bottom: 6px; }
+  .step p { font-size: 13.5px; color: #55555c; }
+
+  .sample {
+    background: #1f2330; color: #dfe2f2; border-radius: 16px; padding: 26px 28px;
+    font: 12.5px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow-x: auto; white-space: pre;
+  }
+  .sample .c1 { color: #8f95c9; }
+  .sample .c2 { color: #ffd84d; }
+  .sample .c3 { color: #7ed47a; }
+
+  footer { padding: 44px 0 60px; color: var(--muted); font-size: 13px; }
+  footer .wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  footer .dot { opacity: .5; }
+  footer a { color: var(--brand); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="halo"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="kicker">
+        <svg width="14" height="14" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="currentColor"/></svg>
+        Chrome extension
+      </span>
+      <h1>Transcript Copier <span class="for">for Microsoft Teams</span></h1>
+      <p class="lede">Select messages like files. Copy or export clean, AI&#8209;ready transcripts, with quotes, mentions, emojis, images and attachments intact.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#" id="install">
+          <svg width="17" height="17" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#fff"/></svg>
+          Add to Chrome
+        </a>
+        <a class="btn ghost" href="#how">How it works</a>
+      </div>
+      <p class="trust"><b>Private by design:</b> nothing is collected, nothing leaves your browser.</p>
+    </div>
+
+    <div class="demo">
+      <div class="demo-stack">
+        <div class="w2">
+          <div class="w2-hd">
+            <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7"/></svg>
+            <span class="w2-title">Transcript</span>
+            <span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></span>
+            <span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></span>
+          </div>
+          <div class="w2-hero">
+            <span class="w2-num">23</span>
+            <span class="w2-badge">✓ Complete</span>
+          </div>
+          <div class="w2-sub">messages · 2 ranges</div>
+          <div class="w2-range"><b>12:03</b> Ayesha &nbsp;→&nbsp; <b>15:13</b> Bilal</div>
+          <div class="w2-div"></div>
+          <div class="w2-btns">
+            <button class="primary">Copy</button>
+            <button>JSON</button>
+            <button>Export</button>
+          </div>
+          <div class="w2-foot"><span>⌘ select · ⇧ range · Esc clear</span><span class="v">v0.8.2</span></div>
+        </div>
+        <div class="w2 dark">
+          <div class="w2-hd">
+            <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7"/></svg>
+            <span class="w2-title">Transcript</span>
+            <span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></span>
+            <span class="ic"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></span>
+          </div>
+          <div class="w2-hero">
+            <span class="w2-num">23</span>
+            <span class="w2-badge">✓ Complete</span>
+          </div>
+          <div class="w2-sub">messages · 2 ranges</div>
+          <div class="w2-range"><b>12:03</b> Ayesha &nbsp;→&nbsp; <b>15:13</b> Bilal</div>
+          <div class="w2-div"></div>
+          <div class="w2-btns">
+            <button class="primary">Copy</button>
+            <button>JSON</button>
+            <button>Export</button>
+          </div>
+          <div class="w2-foot"><span>⌘ select · ⇧ range · Esc clear</span><span class="v">v0.8.2</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Everything survives the copy</h2>
+    <p class="sect-sub">Teams transcripts lose structure the moment you paste them. This keeps every piece a model needs to actually understand a conversation.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="currentColor"/></svg></div>
+        <h3>File-manager selection</h3>
+        <p>Cmd-click to toggle messages, Shift-click for ranges, Cmd+Shift to add a second range. Esc clears. Exactly the muscle memory you already have.</p>
+      </div>
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 8 15.5 17 5"/></svg></div>
+        <h3>Provably complete</h3>
+        <p>Teams unloads messages as you scroll. The panel proves your selection has no holes before you copy — green means every message was captured.</p>
+      </div>
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h5v5c0 4-2 6-5 7v-3c1.5-.6 2-1.6 2-4H4V4Zm8 0h5v5c0 4-2 6-5 7v-3c1.5-.6 2-1.6 2-4h-2V4Z"/></svg></div>
+        <h3>Quotes stay attributed</h3>
+        <p>Quoted replies become “replying to Author (time)” lines at their true position — even several quotes inside one message.</p>
+      </div>
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="4" width="15" height="12" rx="2.5"/><circle cx="7.5" cy="9" r="1.6"/><path d="M3.5 15.5 8 11l3 3 3.5-3.5 2 2"/></svg></div>
+        <h3>Images &amp; attachments</h3>
+        <p>Export saves images beside the transcript, referenced with markdown image syntax so viewers render them and AI tools load them. Attachments keep name and link.</p>
+      </div>
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v9m0 0 3.5-3.5M10 12 6.5 8.5"/><path d="M3.5 15.5h13"/></svg></div>
+        <h3>One-click export bundle</h3>
+        <p>transcript.md plus img-1.jpg, img-2.png… in a dated folder. Point your AI at the folder and it reads text and images together.</p>
+      </div>
+      <div class="card">
+        <div class="glyph"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="8.5" width="12" height="8" rx="2"/><path d="M6.5 8.5V6.5a3.5 3.5 0 0 1 7 0v2"/></svg></div>
+        <h3>Private by design</h3>
+        <p>No accounts, no servers, no telemetry. Everything runs in your browser with your own Teams session; transcripts only go where you paste them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="how">
+  <div class="wrap">
+    <h2>Three steps</h2>
+    <p class="sect-sub">Works in Teams for the web (teams.microsoft.com) — the desktop app can’t host Chrome extensions.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Select</h3>
+        <p><kbd>⌘</kbd>-click messages, or <kbd>⇧</kbd>-click to select a range from your anchor — with a live preview of what a click would take.</p>
+      </div>
+      <div class="step">
+        <h3>Scroll</h3>
+        <p>For long ranges, scroll through the conversation once. The panel turns green when your selection is provably complete.</p>
+      </div>
+      <div class="step">
+        <h3>Copy or export</h3>
+        <p>Copy markdown for a chat box, JSON for tooling, or export a folder with the transcript and every image inside.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What the output looks like</h2>
+    <p class="sect-sub">Chronological, attributed, and honest about gaps — deliberately skipped stretches become [...] markers.</p>
+<div class="sample"><span class="c1">--- 2026-07-31 ---</span>
+
+[12:03] Ayesha:
+Shipping the new menu flow tonight 🚀
+
+[12:05] Bilal <span class="c1">(edited)</span>:
+<span class="c2">&gt; replying to Ayesha (7/31/2026 12:03 PM): "Shipping the new menu flow tonight 🚀"</span>
+Nice — the import worked on the first try.
+<span class="c3">![image](img-1.png)</span>
+
+<span class="c1">[...]</span>
+
+[15:13] Me:
+@Ayesha logs are clean, closing the ticket.
+<span class="c2">[attachment: rollout-checklist.pdf](https://…)</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <svg width="15" height="15" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="#5b5fc7"/></svg>
+    <span>Built by <a href="https://dreamerslab.dev">Dreamers Lab</a></span>
+    <span class="dot">·</span>
+    <span>Not affiliated with Microsoft</span>
+    <span class="dot">·</span>
+    <span id="year"></span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
