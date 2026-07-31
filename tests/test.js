@@ -167,6 +167,34 @@ const imageChecks = {
     allImages.length < 2 || /\[image: https:/.test(exportMd),
 };
 
+// ---- click gestures on macOS (platform-gated modifiers) ----
+const macDom = new JSDOM(`<!doctype html><html><body>${rileyMsg + jordanMsg + edgeMsg + attachMsg}</body></html>`, {
+  url: 'https://teams.microsoft.com/v2/',
+  runScripts: 'outside-only',
+  pretendToBeVisual: true,
+});
+Object.defineProperty(macDom.window.navigator, 'platform', { value: 'MacIntel' });
+macDom.window.eval(fs.readFileSync(path.join(__dirname, '..', 'content.js'), 'utf8'));
+const mac = macDom.window.__ttc;
+mac.scan();
+const macIds = [...mac.store.keys()].sort();
+const macNode = (id) => macDom.window.document.getElementById(`message-body-${id}`);
+const click = (id, mods) =>
+  macNode(id).dispatchEvent(new macDom.window.MouseEvent('click', { bubbles: true, cancelable: true, ...mods }));
+const macCount = () => JSON.parse(mac.json()).length;
+
+click(macIds[0], { ctrlKey: true }); // bare ctrl+click is the Mac context menu
+const bareCtrlIgnored = macCount() === 0;
+click(macIds[0], { metaKey: true });
+click(macIds[2], { metaKey: true }); // scattered selection, anchor moves here
+click(macIds[3], { ctrlKey: true, shiftKey: true }); // windows-habit add-range
+const gestureChecks = {
+  'bare ctrl+click stays reserved for the context menu': bareCtrlIgnored,
+  'cmd+click toggles': macCount() === 3,
+  'ctrl+shift+click adds a range without forgetting cmd-clicked messages':
+    JSON.parse(mac.json()).map((m) => m.id).join() === [macIds[0], macIds[2], macIds[3]].join(),
+};
+
 // ---- drag clamping (pure logic; pointer events live outside jsdom) ----
 const dragChecks = {
   'clamp pins an off-screen panel to the viewport edge':
@@ -186,6 +214,7 @@ report(quoteChecks, 'quotes');
 report(paneChecks, 'pane');
 report(selectionChecks, 'selection');
 report(imageChecks, 'images');
+report(gestureChecks, 'gestures');
 report(dragChecks, 'drag');
 if (failed) {
   console.log('\n--- pane markdown for debugging ---\n' + md2);
@@ -196,6 +225,7 @@ const total =
   Object.keys(paneChecks).length +
   Object.keys(selectionChecks).length +
   Object.keys(imageChecks).length +
-  Object.keys(dragChecks).length;
+  Object.keys(dragChecks).length +
+  Object.keys(gestureChecks).length;
 console.log(`\nall ${total} checks passed (v${ttc.version})`);
 process.exit(0);

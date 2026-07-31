@@ -3,7 +3,7 @@
   if (window.__ttcLoaded) return;
   window.__ttcLoaded = true;
 
-  const VERSION = '0.9.0';
+  const VERSION = '0.9.1';
 
   // Selectors: the only place to touch when Teams ships a DOM change.
   // data-tid attributes and schema.skype.com itemtypes outlive the hashed
@@ -814,7 +814,9 @@
       e.stopPropagation();
       getSelection().removeAllRanges();
       scan(); // make sure the clicked message and its neighbours are captured
-      if (e.shiftKey && isSelectKey(e)) addRange(id);
+      // ctrl+shift adds on macOS too: bare ctrl+click belongs to the system
+      // context menu there, but with shift held the click comes through
+      if (e.shiftKey && (isSelectKey(e) || e.ctrlKey)) addRange(id);
       else if (e.shiftKey) replaceRange(id);
       else toggleOne(id);
     },
