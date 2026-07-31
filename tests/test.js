@@ -167,6 +167,14 @@ const imageChecks = {
     allImages.length < 2 || /\[image: https:/.test(exportMd),
 };
 
+// ---- drag clamping (pure logic; pointer events live outside jsdom) ----
+const dragChecks = {
+  'clamp pins an off-screen panel to the viewport edge':
+    JSON.stringify(ttc2.clampPos(-500, -500, 300, 400, 1280, 800)) === '{"x":8,"y":8}',
+  'clamp keeps the panel fully visible at the far corner':
+    JSON.stringify(ttc2.clampPos(5000, 5000, 300, 400, 1280, 800)) === '{"x":972,"y":392}',
+};
+
 let failed = 0;
 const report = (checkSet, label) => {
   for (const [name, ok] of Object.entries(checkSet)) {
@@ -178,6 +186,7 @@ report(quoteChecks, 'quotes');
 report(paneChecks, 'pane');
 report(selectionChecks, 'selection');
 report(imageChecks, 'images');
+report(dragChecks, 'drag');
 if (failed) {
   console.log('\n--- pane markdown for debugging ---\n' + md2);
   process.exit(1);
@@ -186,6 +195,7 @@ const total =
   Object.keys(quoteChecks).length +
   Object.keys(paneChecks).length +
   Object.keys(selectionChecks).length +
-  Object.keys(imageChecks).length;
+  Object.keys(imageChecks).length +
+  Object.keys(dragChecks).length;
 console.log(`\nall ${total} checks passed (v${ttc.version})`);
 process.exit(0);

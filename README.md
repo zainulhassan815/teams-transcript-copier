@@ -19,6 +19,7 @@ Standard file-manager selection, applied to messages:
 - **Shift-click**: select the range from the anchor to the clicked message. Shift-clicking again re-extends from the same anchor, replacing the previous extension. While Shift is held, hovering previews the range a click would select.
 - **Cmd/Ctrl+Shift-click**: add a second range to the existing selection.
 - **Esc**: clear the selection (ignored while typing in the compose box).
+- **Drag the panel** by its header (the pill drags too); position is remembered. Double-click the title to snap it back to the corner.
 
 Workflow: open a chat (the **⧉ Transcript** panel appears bottom-right), select your messages, **scroll through any long range** so every message passes through the viewport (Teams unmounts off-screen messages; the extension captures them as they appear), then hit **Copy** (markdown), **JSON**, or **Export**. The ↺ header icon resets the capture.
 

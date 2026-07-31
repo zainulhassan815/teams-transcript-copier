@@ -3,7 +3,7 @@
   if (window.__ttcLoaded) return;
   window.__ttcLoaded = true;
 
-  const VERSION = '0.8.2';
+  const VERSION = '0.9.0';
 
   // Selectors: the only place to touch when Teams ships a DOM change.
   // data-tid attributes and schema.skype.com itemtypes outlive the hashed
@@ -530,7 +530,7 @@
         box-shadow: 0 10px 30px rgba(0,0,0,.12);
         padding: 18px; font-size: 13px;
       }
-      .hd { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+      .hd { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; cursor: grab; -webkit-user-select: none; user-select: none; }
       .hd svg.logo { flex: none; }
       .title { font-weight: 650; font-size: 14px; flex: 1; letter-spacing: 0.1px; }
       .hd button { color: #8a8a8e; padding: 3px; border-radius: 6px; line-height: 0; }
@@ -632,9 +632,87 @@
     ui[id] = shadow.getElementById(id);
   }
 
+  // ----- drag: an overlay pays rent for covering Teams by being movable -----
+  const POS_KEY = 'ttc-pos';
+
+  const clampPos = (x, y, w, h, vw, vh) => ({
+    x: Math.min(Math.max(x, 8), Math.max(8, vw - w - 8)),
+    y: Math.min(Math.max(y, 8), Math.max(8, vh - h - 8)),
+  });
+
+  const loadPos = () => {
+    try {
+      const p = JSON.parse(localStorage.getItem(POS_KEY));
+      return p && Number.isFinite(p.x) && Number.isFinite(p.y) ? p : null;
+    } catch {
+      return null;
+    }
+  };
+  const savePos = (p) => {
+    try {
+      localStorage.setItem(POS_KEY, JSON.stringify(p));
+    } catch {}
+  };
+
+  function applyPos(p) {
+    host.style.left = p.x + 'px';
+    host.style.top = p.y + 'px';
+    host.style.right = 'auto';
+    host.style.bottom = 'auto';
+  }
+
+  function restorePos() {
+    const p = loadPos();
+    if (!p) return;
+    const r = host.getBoundingClientRect();
+    applyPos(clampPos(p.x, p.y, r.width, r.height, innerWidth, innerHeight));
+  }
+
+  function resetPos() {
+    try {
+      localStorage.removeItem(POS_KEY);
+    } catch {}
+    host.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:2147483647;';
+  }
+
+  let dragJustEnded = false;
+  function makeDraggable(handle) {
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      if (handle !== ui.pill && e.target.closest('button')) return; // header buttons still click
+      const rect = host.getBoundingClientRect();
+      const offX = e.clientX - rect.left;
+      const offY = e.clientY - rect.top;
+      let moved = false;
+      const move = (ev) => {
+        // 4px threshold so a sloppy click never turns into a micro-drag
+        if (!moved && Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) < 4) return;
+        moved = true;
+        applyPos(clampPos(ev.clientX - offX, ev.clientY - offY, rect.width, rect.height, innerWidth, innerHeight));
+      };
+      const up = () => {
+        window.removeEventListener('pointermove', move, true);
+        window.removeEventListener('pointerup', up, true);
+        if (!moved) return;
+        const r = host.getBoundingClientRect();
+        savePos({ x: r.left, y: r.top });
+        dragJustEnded = true; // swallow the click that follows a pill drag
+        setTimeout(() => (dragJustEnded = false), 0);
+      };
+      window.addEventListener('pointermove', move, true);
+      window.addEventListener('pointerup', up, true);
+      e.preventDefault();
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (loadPos()) restorePos();
+  });
+
   function showPanel() {
     panelVisible = true;
     (expanded ? ui.card : ui.pill).classList.remove('hidden');
+    restorePos();
   }
 
   // author names are message content: build the range line from text nodes,
@@ -694,7 +772,11 @@
     ui.card.classList.add('hidden');
     ui.pill.classList.remove('hidden');
   });
+  makeDraggable(shadow.querySelector('.hd'));
+  makeDraggable(ui.pill);
+  shadow.querySelector('.title').addEventListener('dblclick', resetPos);
   ui.pill.addEventListener('click', () => {
+    if (dragJustEnded) return;
     expanded = true;
     ui.pill.classList.add('hidden');
     ui.card.classList.remove('hidden');
@@ -802,6 +884,7 @@
       selection = new Set(ids);
       refresh();
     },
+    clampPos,
     markdown: () => buildMarkdown(selectionRecords()),
     json: () => buildJson(selectionRecords()),
     exportMarkdown: (savedPairs) => buildMarkdown(selectionRecords(), fileImageRef(new Map(savedPairs))),
