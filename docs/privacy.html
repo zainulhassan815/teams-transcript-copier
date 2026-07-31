@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Transcript Copier for Microsoft Teams</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z' fill='%235b5fc7' stroke='%235b5fc7' stroke-width='2.6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root { --brand: #5b5fc7; --ink: #1d1d21; --muted: #77777d; --line: #e6e6ea; }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: #fbfbfd; color: var(--ink); line-height: 1.65;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 64px 24px 80px; }
+  .mark { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 650; color: var(--brand); text-decoration: none; margin-bottom: 28px; }
+  h1 { font-size: 32px; letter-spacing: -0.6px; margin-bottom: 6px; }
+  .date { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
+  h2 { font-size: 19px; margin: 34px 0 10px; }
+  p, li { font-size: 15.5px; color: #3c3c42; }
+  ul { padding-left: 22px; margin: 10px 0; }
+  li { margin: 6px 0; }
+  .card { background: #eeeffc; border-radius: 12px; padding: 18px 22px; margin: 24px 0; font-weight: 600; color: var(--ink); }
+  a { color: var(--brand); }
+  footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="mark" href="/">
+    <svg width="16" height="16" viewBox="0 0 28 28"><path d="M4.5 4.5 L23.5 10.2 L14.4 14.4 L10.2 23.5 Z" fill="currentColor"/></svg>
+    Transcript Copier for Microsoft Teams
+  </a>
+  <h1>Privacy Policy</h1>
+  <div class="date">Effective July 31, 2026</div>
+
+  <div class="card">The short version: this extension collects nothing, transmits nothing, and has no servers. Everything happens in your browser, and your data only goes where you deliberately put it.</div>
+
+  <h2>What the extension does</h2>
+  <p>Transcript Copier is a Chrome extension with a single purpose: it lets you select messages in Microsoft Teams (web) and copy or export them as a transcript. It runs entirely on your device.</p>
+
+  <h2>Data collection</h2>
+  <p>We do not collect, store, transmit, sell, or share any user data. Specifically:</p>
+  <ul>
+    <li>No analytics, telemetry, tracking, or crash reporting of any kind.</li>
+    <li>No accounts, and no communication with any server operated by us. The extension makes no network requests except the one described under Export below.</li>
+    <li>Messages you select are processed in memory in your browser to build the transcript, and are discarded when you close or switch chats.</li>
+    <li>The transcript goes only where you send it: your clipboard when you press Copy, or a folder on your device when you press Export.</li>
+    <li>The only thing persisted is the panel's screen position, saved locally in your browser. It contains no message content.</li>
+  </ul>
+
+  <h2>Permissions, and why they exist</h2>
+  <ul>
+    <li><b>Access to teams.microsoft.com pages</b>: required to read the messages you select and to show the selection panel. The extension only runs on Microsoft Teams pages.</li>
+    <li><b>Clipboard write</b>: used solely when you press Copy, to place the transcript on your clipboard.</li>
+    <li><b>Downloads</b>: used solely when you press Export, to save the transcript and its images into your Downloads folder.</li>
+    <li><b>Access to Teams' media hosts</b> (asyncgw.teams.microsoft.com, asm.skype.com): used solely during Export to fetch the images from your selected messages using your own existing Teams session, so they can be saved next to the transcript. These requests go directly from your browser to Microsoft, exactly as when Teams displays the images itself.</li>
+  </ul>
+
+  <h2>Remote code</h2>
+  <p>The extension contains no remote code. All code ships inside the extension package and nothing is loaded or evaluated from the network.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy ever changes, the new version will be published at this address with an updated effective date. Since the extension has no update channel to you other than the Chrome Web Store, material changes would also be noted in the store listing's changelog.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or concerns: open an issue at <a href="https://github.com/zainulhassan815/teams-transcript-copier">github.com/zainulhassan815/teams-transcript-copier</a>.</p>
+
+  <footer>Transcript Copier is an independent project and is not affiliated with Microsoft.</footer>
+</div>
+</body>
+</html>
