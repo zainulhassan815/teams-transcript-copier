@@ -19,7 +19,10 @@ Standard file-manager selection, applied to messages:
 - **Shift-click**: select the range from the anchor to the clicked message. Shift-clicking again re-extends from the same anchor, replacing the previous extension. While Shift is held, hovering previews the range a click would select.
 - **Cmd/Ctrl+Shift-click**: add a second range to the existing selection.
 - **Esc**: clear the selection (ignored while typing in the compose box).
+- **⌥C (Mac) / Alt+C (Windows)**: copy the selection as markdown without touching the panel.
 - **Drag the panel** by its header (the pill drags too); position is remembered. Double-click the title to snap it back to the corner.
+
+The panel stays out of the way: it rests as a small pill, expands automatically when you start a selection, and respects a manual collapse until the selection is cleared. The gear icon opens settings with two opt-ins, "Clear selection after copy" and "Collapse panel after copy" (both off by default).
 
 Workflow: open a chat (the **⧉ Transcript** panel appears bottom-right), select your messages, **scroll through any long range** so every message passes through the viewport (Teams unmounts off-screen messages; the extension captures them as they appear), then hit **Copy** (markdown), **JSON**, or **Export**. The ↺ header icon resets the capture.
 
@@ -52,11 +55,11 @@ Yes, depends on the fulfilment-date design sign-off.
 
 - **Virtualization**: Teams only mounts a window of messages. A `MutationObserver` drains every paint into a `Map` keyed by message id; copy reads the map, never the DOM.
 - **Completeness**: each scan records which ids were adjacent in the same paint. A range is "complete" only when its sorted ids form an unbroken chain of those confirmed edges. That is what drives the green/amber dot.
-- **Selectors**: everything DOM-specific lives in the `SEL` object at the top of `content.js`. When a Teams redesign breaks capture (panel stuck at 0, missing authors), fix candidates there. Prefer `data-tid` attributes and Fluent slot classes (`fui-ChatMessage__body`) over hashed class names. Message ids are found generically (any 13-digit epoch in nearby attributes), so id extraction usually survives redesigns.
+- **Selectors**: everything DOM-specific lives in `src/config.js`. When a Teams redesign breaks capture (panel stuck at 0, missing authors), fix candidates there. Prefer `data-tid` attributes and Fluent slot classes (`fui-ChatMessage__body`) over hashed class names. Message ids are found generically (any 13-digit epoch in nearby attributes), so id extraction usually survives redesigns.
 
 ## Tests
 
-`tests/test.js` runs `content.js` in jsdom against a real captured Teams message (`tests/fixture.html`) plus a synthetic double-quote message, and asserts extraction end-to-end. `npm install` once, then `npm test`. Run it after any selector change. In a live Teams tab, `window.__ttc` exposes `scan()`, `store`, and `markdown()` in the DevTools console for diagnosis.
+`tests/test.js` runs the manifest's content scripts (`src/*.js`, in ship order) in jsdom against a real captured Teams message (`tests/fixture.html`) plus a synthetic double-quote message, and asserts extraction end-to-end. `npm install` once, then `npm test`. Run it after any selector change. In a live Teams tab, `window.__ttc` exposes `scan()`, `store`, and `markdown()` in the DevTools console for diagnosis.
 
 ## Store assets & publishing
 
