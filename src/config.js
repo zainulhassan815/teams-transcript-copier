@@ -32,7 +32,7 @@
   const QUOTE_TS_RE = /\d{1,2}\/\d{1,2}\/\d{2,4},?\s+\d{1,2}:\d{2}(?:\s?[AP]M)?/i;
 
   TTC.config = {
-    VERSION: '0.10.0',
+    VERSION: '0.10.1',
     SEL,
     MSG_SEL: SEL.message.join(','),
     MINE_SEL: '[class*="ChatMyMessage"]',

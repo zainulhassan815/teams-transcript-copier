@@ -246,8 +246,15 @@ const FIXTURES = rileyMsg + jordanMsg + edgeMsg + attachMsg;
   gear.click(); // closing settings must settle back to the pill
   const settingsCloseSettles = !ux.isExpanded();
 
+  const pill = [...uxWin.document.documentElement.children].find((el) => el.shadowRoot).shadowRoot.getElementById('pill');
+  pill.click(); // deliberately open the card at idle
+  gear.click(); // open settings with no selection
+  gear.click(); // closing must return to the previous view, not the pill
+  const settingsCloseKeepsCard = ux.isExpanded();
+
   const uxChecks = {
     'closing settings at idle returns to the pill': settingsCloseSettles,
+    'closing settings reopened at idle keeps the card': settingsCloseKeepsCard,
     'first run opens the card with the gesture hints': firstWin.__ttc.isExpanded(),
     'after first run the idle state is the pill': idlePill,
     'starting a selection auto-expands the panel': autoExpanded,

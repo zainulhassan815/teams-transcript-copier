@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Transcript Copier for Microsoft Teams",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Select Microsoft Teams messages with Cmd/Ctrl-click and Shift-click, then copy or export them as a clean AI-ready transcript.",
   "permissions": [
     "clipboardWrite",

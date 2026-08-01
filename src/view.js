@@ -124,7 +124,7 @@
       <div class="hd">
         <span class="logo" style="line-height:0">${POINTER(15, '#5b5fc7')}</span>
         <span class="title">Transcript</span>
-        <button id="gear" title="Settings"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6.5h14M3 13.5h14"/><circle cx="8" cy="6.5" r="2.2"/><circle cx="12.5" cy="13.5" r="2.2"/></svg></button>
+        <button id="gear" title="Settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.02a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h.02a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.02a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg></button>
         <button id="reset" title="Reset capture"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 1.5v3h-3"/></svg></button>
         <button id="min" title="Collapse"><svg width="14" height="14" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8H12.5"/></svg></button>
       </div>
@@ -346,12 +346,17 @@
     setExpanded(true);
     render();
   });
+  let hadSelectionAtSettingsOpen = false;
   ui.gear.addEventListener('click', () => {
     settingsOpen = !settingsOpen;
-    ui.optClear.checked = prefs.get('clearAfterCopy');
-    ui.optCollapse.checked = prefs.get('collapseAfterCopy');
-    // the 0->N transition can fire while settings hid it; re-settle idle state
-    if (!settingsOpen && !state.has()) setExpanded(false);
+    if (settingsOpen) {
+      hadSelectionAtSettingsOpen = state.has();
+      ui.optClear.checked = prefs.get('clearAfterCopy');
+      ui.optCollapse.checked = prefs.get('collapseAfterCopy');
+    } else if (hadSelectionAtSettingsOpen && !state.has()) {
+      // the N->0 transition fired while settings hid the stats; settle to idle
+      setExpanded(false);
+    }
     render();
   });
   ui.optClear.addEventListener('change', () => prefs.set('clearAfterCopy', ui.optClear.checked));
