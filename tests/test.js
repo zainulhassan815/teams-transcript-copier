@@ -239,7 +239,15 @@ const FIXTURES = rileyMsg + jordanMsg + edgeMsg + attachMsg;
   await tick();
   const ignoredWhileTyping = uxWin.__copied === null;
 
+  const gear = [...uxWin.document.documentElement.children].find((el) => el.shadowRoot).shadowRoot.getElementById('gear');
+  ux.toggle(uxIds[0]);
+  gear.click(); // open settings with a live selection
+  ux.clear(); // selection empties while the stats are hidden
+  gear.click(); // closing settings must settle back to the pill
+  const settingsCloseSettles = !ux.isExpanded();
+
   const uxChecks = {
+    'closing settings at idle returns to the pill': settingsCloseSettles,
     'first run opens the card with the gesture hints': firstWin.__ttc.isExpanded(),
     'after first run the idle state is the pill': idlePill,
     'starting a selection auto-expands the panel': autoExpanded,

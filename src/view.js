@@ -350,6 +350,8 @@
     settingsOpen = !settingsOpen;
     ui.optClear.checked = prefs.get('clearAfterCopy');
     ui.optCollapse.checked = prefs.get('collapseAfterCopy');
+    // the 0->N transition can fire while settings hid it; re-settle idle state
+    if (!settingsOpen && !state.has()) setExpanded(false);
     render();
   });
   ui.optClear.addEventListener('change', () => prefs.set('clearAfterCopy', ui.optClear.checked));
